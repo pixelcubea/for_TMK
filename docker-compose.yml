@@ -1,0 +1,47 @@
+version: '3.3'
+services:
+  db:
+    env_file:
+      - .env
+    image: mysql:${TAG}
+    container_name: mysqldb1
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DBNAME}
+      MYSQL_USER: ${DBUSER}
+      MYSQL_PASSWORD: ${DBUSERPASS}
+      MYSQL_ROOT_PASSWORD: ${DBROOTPASS}
+    ports:
+      - '8833:3306'
+    expose:
+      - '8833'
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  phpmyadmin:
+
+    image: phpmyadmin/phpmyadmin
+
+    container_name: admindb1
+
+    links:
+
+      - db
+
+    environment:
+
+      PMA_HOST: mysqldb1
+
+      PMA_PORT: 3306
+
+      PMA_ARBITRARY: 1
+
+    restart: always
+
+    ports:
+
+      - 8080:80
+
+volumes:
+
+  dbdata:
